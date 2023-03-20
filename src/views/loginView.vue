@@ -15,10 +15,10 @@
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import qs from "qs";
-export default {
+<script lang="ts">
+import { login } from "@/service/AuthenticationService";
+import { defineComponent } from "vue";
+export default defineComponent({
   data() {
     return {
       username: "",
@@ -31,21 +31,14 @@ export default {
         username: this.username,
         password: this.password,
       };
-      const data = qs.stringify(credentials);
-      const headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-      };
-      axios
-        .post("http://localhost:9090/login", data, { headers })
-        .then(() => {
-          // Successful login, redirect the user to the inbox page
-          console.log("logged in ");
+      login(credentials)
+        .then((result) => {
+          this.$router.push({ name: "home" });
         })
-        .catch(() => {
-          // Login failed, display an error message to the user
-          alert("Login failed. Please try again.");
+        .catch((result) => {
+          console.log(result.status);
         });
     },
   },
-};
+});
 </script>
